@@ -3,12 +3,20 @@ from data import create_dataloader, get_tokenizer
 from model import LLMModel
 from model_run import get_optimizer, train_model
 from utils import load_checkpoint, ensure_checkpoints_dir_exists, get_device
+from inference import generate_and_print_sample, token_ids_to_text
 
 device = get_device()
 print(f"Using device: {device}")
 
 tokenizer = get_tokenizer()
-config = Config(context_length=256, vocab_size=tokenizer.n_vocab)
+config = Config(
+    context_length=256,
+    vocab_size=tokenizer.n_vocab,
+    emb_dim=128,
+    n_blocks=2,
+    n_heads=32,
+    ffn_dim=512,
+)
 model = LLMModel(config)
 txt = open("data/adventures_of_sherlock_holmes.txt", "r").read()
 
@@ -25,6 +33,27 @@ train_loader = create_dataloader(
 optimizer = get_optimizer(model)
 
 
+def playground():
+    token_ids = train_loader.dataset[0][0]
+    print("Token IDs shape:", token_ids.shape)
+    print("Token IDs:", token_ids)
+    print("Decoded text:", token_ids_to_text(token_ids.unsqueeze(0), tokenizer))
+
+
+def playground_inference():
+    start_context = "Sherlock Holmes looked me in the eye and said"
+    max_new_tokens = 200
+
+    generate_and_print_sample(
+        model=model,
+        tokenizer=tokenizer,
+        device=device,
+        start_context=start_context,
+        context_size=config.context_length,
+        max_new_tokens=max_new_tokens,
+    )
+
+
 if __name__ == "__main__":
     ensure_checkpoints_dir_exists()
     checkpoint_file = "saved_checkpoints/filename.pth.tar"
@@ -32,6 +61,8 @@ if __name__ == "__main__":
     start_epoch = 0
     if checkpoint_file:
         start_epoch = load_checkpoint(checkpoint_file, model, optimizer, device)
+        if start_epoch > 0:
+            playground_inference()
 
     train_model(
         train_loader,
