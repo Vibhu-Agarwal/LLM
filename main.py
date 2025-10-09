@@ -70,5 +70,5 @@ if __name__ == "__main__":
         optimizer,
         start_epoch=start_epoch,
         num_epochs=1,
-        tf_experiment="runs/single_layer_rnn_greedy_search",
+        tf_experiment="runs/my_first_llm_experiment",
     )
