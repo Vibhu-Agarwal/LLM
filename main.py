@@ -1,5 +1,5 @@
 from config import Config
-from data import get_train_and_val_dataloaders, get_tokenizer
+from data import get_train_and_val_dataloaders, get_tokenizer, DATA_FETCHERS
 from model import LLMModel
 from model_run import get_optimizer, train_model
 from utils import load_checkpoint, ensure_checkpoints_dir_exists, get_device
@@ -17,12 +17,12 @@ config = Config(
     n_heads=32,
     ffn_dim=512,
 )
-model = LLMModel(config)
+model = LLMModel(config).to(device)
 txt = open("data/adventures_of_sherlock_holmes.txt", "r").read()
 
 
 train_loader, val_loader = get_train_and_val_dataloaders(
-    txt,
+    DATA_FETCHERS["adventures_of_sherlock_holmes"],
     tokenizer,
     batch_size=32,
     max_length=config.context_length,

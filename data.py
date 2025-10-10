@@ -1,6 +1,26 @@
 import tiktoken
 import torch
 from torch.utils.data import Dataset, DataLoader
+from typing import Callable
+
+DataFetcher = Callable[[], str]
+
+
+def _get_adventures_of_sherlock_holmes_text():
+    with open("data/adventures_of_sherlock_holmes.txt", "r") as file:
+        txt = file.read()
+    txt = txt.split(
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***\n\n\n\n\n"
+    )[1]
+    txt = txt.split(
+        "\n\n\n\n\n\n*** END OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***"
+    )[0]
+    return txt
+
+
+DATA_FETCHERS: dict[str, DataFetcher] = {
+    "adventures_of_sherlock_holmes": _get_adventures_of_sherlock_holmes_text
+}
 
 
 class CustomDataset(Dataset):
@@ -30,13 +50,14 @@ def get_tokenizer():
 
 
 def get_train_and_val_dataloaders(
-    txt,
+    data_fetcher: DataFetcher,
     tokenizer: tiktoken.Encoding,
     batch_size=4,
     max_length=256,
     stride=128,
     train_ratio=0.9,
 ) -> tuple[DataLoader, DataLoader]:
+    txt = data_fetcher()
     split_idx = int(len(txt) * train_ratio)
 
     train_dataset = CustomDataset(txt[:split_idx], tokenizer, max_length, stride)
