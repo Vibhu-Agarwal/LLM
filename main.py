@@ -1,9 +1,9 @@
 from config import Config
-from data import create_dataloader, get_tokenizer
+from data import get_train_and_val_dataloaders, get_tokenizer
 from model import LLMModel
 from model_run import get_optimizer, train_model
 from utils import load_checkpoint, ensure_checkpoints_dir_exists, get_device
-from inference import generate_and_print_sample, token_ids_to_text
+from playground import playground_inference
 
 device = get_device()
 print(f"Using device: {device}")
@@ -21,37 +21,15 @@ model = LLMModel(config)
 txt = open("data/adventures_of_sherlock_holmes.txt", "r").read()
 
 
-train_loader = create_dataloader(
-    txt=txt,
-    tokenizer=tokenizer,
+train_loader, val_loader = get_train_and_val_dataloaders(
+    txt,
+    tokenizer,
     batch_size=32,
     max_length=config.context_length,
     stride=128,
-    shuffle=True,
-    drop_last=True,
+    train_ratio=0.9,
 )
 optimizer = get_optimizer(model)
-
-
-def playground():
-    token_ids = train_loader.dataset[0][0]
-    print("Token IDs shape:", token_ids.shape)
-    print("Token IDs:", token_ids)
-    print("Decoded text:", token_ids_to_text(token_ids.unsqueeze(0), tokenizer))
-
-
-def playground_inference():
-    start_context = "Sherlock Holmes looked me in the eye and said"
-    max_new_tokens = 200
-
-    generate_and_print_sample(
-        model=model,
-        tokenizer=tokenizer,
-        device=device,
-        start_context=start_context,
-        context_size=config.context_length,
-        max_new_tokens=max_new_tokens,
-    )
 
 
 if __name__ == "__main__":
@@ -62,13 +40,14 @@ if __name__ == "__main__":
     if checkpoint_file:
         start_epoch = load_checkpoint(checkpoint_file, model, optimizer, device)
         if start_epoch > 0:
-            playground_inference()
+            playground_inference(model, tokenizer, device, config)
 
     train_model(
         train_loader,
+        val_loader,
         model,
         optimizer,
         start_epoch=start_epoch,
         num_epochs=1,
-        tf_experiment="runs/my_first_llm_experiment",
+        on_eval=lambda: playground_inference(model, tokenizer, device, config),
     )

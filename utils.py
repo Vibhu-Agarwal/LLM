@@ -13,7 +13,6 @@ def save_checkpoint(
     epoch: int,
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
-    loss: float,
     filename="checkpoint.pth.tar",
 ):
     """Saves model and other training parameters at the current epoch."""
@@ -22,7 +21,6 @@ def save_checkpoint(
         "epoch": epoch,
         "model_state_dict": model.state_dict(),
         "optimizer_state_dict": optimizer.state_dict(),
-        "loss": loss,
     }
     ts = time.strftime("%Y%m%d_%H%M%S_")
     filename = f"model_checkpoints/{ts}{filename}"

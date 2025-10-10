@@ -4,7 +4,9 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class CustomDataset(Dataset):
-    def __init__(self, txt, tokenizer, max_length, stride):
+    def __init__(
+        self, txt: str, tokenizer: tiktoken.Encoding, max_length: int, stride: int
+    ):
         self.input_ids = []
         self.target_ids = []
 
@@ -27,23 +29,32 @@ def get_tokenizer():
     return tiktoken.get_encoding("gpt2")
 
 
-def create_dataloader(
+def get_train_and_val_dataloaders(
     txt,
     tokenizer: tiktoken.Encoding,
     batch_size=4,
     max_length=256,
     stride=128,
-    shuffle=True,
-    drop_last=True,
-) -> DataLoader:
+    train_ratio=0.9,
+) -> tuple[DataLoader, DataLoader]:
+    split_idx = int(len(txt) * train_ratio)
 
-    dataset = CustomDataset(txt, tokenizer, max_length, stride)
+    train_dataset = CustomDataset(txt[:split_idx], tokenizer, max_length, stride)
 
-    dataloader = DataLoader(
-        dataset,
+    train_dataloader = DataLoader(
+        train_dataset,
         batch_size=batch_size,
-        shuffle=shuffle,
-        drop_last=drop_last,
+        shuffle=True,
+        drop_last=True,
     )
 
-    return dataloader
+    val_dataset = CustomDataset(txt[split_idx:], tokenizer, max_length, stride)
+
+    val_dataloader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        drop_last=False,
+    )
+
+    return train_dataloader, val_dataloader
