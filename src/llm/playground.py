@@ -1,7 +1,7 @@
 import torch
 import tiktoken
-from inference import generate_and_print_sample, token_ids_to_text
-from model import LLMModel, Config
+from .inference import generate_and_print_sample, token_ids_to_text
+from .model import LLMModel, Config
 
 
 def playground_data(
@@ -19,9 +19,8 @@ def playground_inference(
     device: torch.device,
     config: Config,
     max_new_tokens: int = 200,
+    start_context: str = "After tea, Watson meets Sherlock and discusses the case. Sherlock is ",
 ):
-    start_context = "Sherlock Holmes looked me in the eye and said"
-
     generate_and_print_sample(
         model=model,
         tokenizer=tokenizer,

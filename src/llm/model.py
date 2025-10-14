@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from config import Config
+from .config import Config
 
 
 class Attention(nn.Module):

@@ -2,12 +2,17 @@ import tiktoken
 import torch
 from torch.utils.data import Dataset, DataLoader
 from typing import Callable
+from pathlib import Path
 
 DataFetcher = Callable[[], str]
 
 
 def _get_sherlock_holmes_text(filename: str, start_marker: str, end_marker: str):
-    with open(f"data/sherlock_holmes/{filename}", "r") as file:
+    current_file_path = Path(__file__).resolve()
+    curr_dir = current_file_path.parent
+    data_file_path = curr_dir / "data" / "sherlock_holmes" / filename
+
+    with open(data_file_path, "r") as file:
         txt = file.read()
     txt = txt.split(start_marker)[1]
     txt = txt.split(end_marker)[0]

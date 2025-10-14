@@ -1,11 +1,13 @@
 [project]
-name = "llm"
-version = "0.1.0"
+name = "vibhu-llm"
+version = "0.1.1"
 description = ""
 authors = [
     {name = "Vibhu Agarwal",email = "vibhu4agarwal@gmail.com"}
 ]
 readme = "README.md"
+homepage = "https://github.com/Vibhu-Agarwal/LLM"
+repository = "https://github.com/Vibhu-Agarwal/LLM"
 requires-python = ">=3.12,<3.14"
 dependencies = [
     "torch (>=2.8.0,<3.0.0)",
@@ -15,6 +17,9 @@ dependencies = [
     "tiktoken (>=0.11.0,<0.12.0)",
     "tensorboard (>=2.20.0,<3.0.0)"
 ]
+
+[tool.poetry]
+packages = [{include = "llm", from = "src"}]
 
 
 [build-system]
