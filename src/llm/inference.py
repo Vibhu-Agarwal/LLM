@@ -1,6 +1,6 @@
 import torch
 import tiktoken
-from model import LLMModel
+from .model import LLMModel
 
 
 def text_to_token_ids(text: str, tokenizer: tiktoken.Encoding):

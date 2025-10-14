@@ -1,7 +1,7 @@
 import torch
 from torch.utils.tensorboard import SummaryWriter
-from model import LLMModel
-from src.utils import save_checkpoint
+from .model import LLMModel
+from .utils import save_checkpoint
 from typing import Callable
 
 

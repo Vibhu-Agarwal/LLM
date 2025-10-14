@@ -1,7 +1,7 @@
 import torch
 import tiktoken
-from inference import generate_and_print_sample, token_ids_to_text
-from model import LLMModel, Config
+from .inference import generate_and_print_sample, token_ids_to_text
+from .model import LLMModel, Config
 
 
 def playground_data(
