@@ -6,20 +6,75 @@ from typing import Callable
 DataFetcher = Callable[[], str]
 
 
-def _get_adventures_of_sherlock_holmes_text():
-    with open("data/adventures_of_sherlock_holmes.txt", "r") as file:
+def _get_sherlock_holmes_text(filename: str, start_marker: str, end_marker: str):
+    with open(f"data/sherlock_holmes/{filename}", "r") as file:
         txt = file.read()
-    txt = txt.split(
-        "*** START OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***\n\n\n\n\n"
-    )[1]
-    txt = txt.split(
-        "\n\n\n\n\n\n*** END OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***"
-    )[0]
+    txt = txt.split(start_marker)[1]
+    txt = txt.split(end_marker)[0]
     return txt
 
 
+def _get_adventures_of_sherlock_holmes_text():
+    return _get_sherlock_holmes_text(
+        "adventures_of_sherlock_holmes.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK THE ADVENTURES OF SHERLOCK HOLMES ***",
+    )
+
+
+def _get_valley_of_fear_sherlock_holmes_text():
+    return _get_sherlock_holmes_text(
+        "valley_of_fear.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE VALLEY OF FEAR ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK THE VALLEY OF FEAR ***",
+    )
+
+
+def _get_sign_of_the_four():
+    return _get_sherlock_holmes_text(
+        "sign_of_the_four.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE SIGN OF THE FOUR ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK THE SIGN OF THE FOUR ***",
+    )
+
+
+def _get_study_in_scarlet():
+    return _get_sherlock_holmes_text(
+        "study_in_scarlet.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK A STUDY IN SCARLET ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK A STUDY IN SCARLET ***",
+    )
+
+
+def _get_return_of_sherlock_holmes():
+    return _get_sherlock_holmes_text(
+        "return_of_sherlock_holmes.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE RETURN OF SHERLOCK HOLMES ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK THE RETURN OF SHERLOCK HOLMES ***",
+    )
+
+
+def _get_hound_of_the_baskervilles():
+    return _get_sherlock_holmes_text(
+        "hound_of_baskervilles.txt",
+        "*** START OF THE PROJECT GUTENBERG EBOOK THE HOUND OF THE BASKERVILLES ***",
+        "*** END OF THE PROJECT GUTENBERG EBOOK THE HOUND OF THE BASKERVILLES ***",
+    )
+
+
+def _get_llm_data_fetcher():
+    t1 = _get_adventures_of_sherlock_holmes_text()
+    t2 = _get_valley_of_fear_sherlock_holmes_text()
+    t3 = _get_sign_of_the_four()
+    t4 = _get_study_in_scarlet()
+    t5 = _get_return_of_sherlock_holmes()
+    t6 = _get_hound_of_the_baskervilles()
+    return f"{t1}\n\n{t2}\n\n{t3}\n\n{t4}\n\n{t5}\n\n{t6}"
+
+
 DATA_FETCHERS: dict[str, DataFetcher] = {
-    "adventures_of_sherlock_holmes": _get_adventures_of_sherlock_holmes_text
+    "adventures_of_sherlock_holmes": _get_adventures_of_sherlock_holmes_text,
+    "llm_data": _get_llm_data_fetcher,
 }
 
 
