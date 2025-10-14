@@ -32,7 +32,7 @@ class ModelRunUtils:
         config_dict: dict,
         batch_loss_write_interval: int = 10,
         eval_interval: int = 30,
-        tf_experiment: str = "runs/my_first_llm_exp_post_14oct_bugfix_1",
+        tf_experiment: str = "runs/experiment",
         eval_callback: Callable[[], None] | None = None,
     ):
         self.writer = SummaryWriter(tf_experiment)

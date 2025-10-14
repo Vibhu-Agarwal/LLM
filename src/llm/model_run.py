@@ -20,6 +20,7 @@ def train_model(
     start_epoch: int = 0,
     num_epochs: int = 1,
     on_eval: Callable[[], None] | None = None,
+    experiment_name: str = "runs/experiment",
 ):
     device = get_device()
     util_handler = ModelRunUtils(
@@ -31,6 +32,7 @@ def train_model(
         device=device,
         config_dict=config_dict,
         eval_callback=on_eval,
+        tf_experiment=experiment_name,
     )
 
     model.train()
