@@ -12,3 +12,12 @@ class Config:
         self.emb_dim = emb_dim
         self.n_layers = n_blocks
         self.n_heads = n_heads
+
+    def dict(self):
+        return {
+            "vocab_size": self.vocab_size,
+            "context_length": self.context_length,
+            "emb_dim": self.emb_dim,
+            "n_layers": self.n_layers,
+            "n_heads": self.n_heads,
+        }

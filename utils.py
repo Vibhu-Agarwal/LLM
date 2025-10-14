@@ -14,6 +14,7 @@ def save_checkpoint(
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
     filename="checkpoint.pth.tar",
+    **kwargs,
 ):
     """Saves model and other training parameters at the current epoch."""
     print(f"Saving checkpoint to {filename}...")
@@ -21,6 +22,7 @@ def save_checkpoint(
         "epoch": epoch,
         "model_state_dict": model.state_dict(),
         "optimizer_state_dict": optimizer.state_dict(),
+        **kwargs,
     }
     ts = time.strftime("%Y%m%d_%H%M%S_")
     filename = f"model_checkpoints/{ts}{filename}"
@@ -52,6 +54,9 @@ def load_checkpoint(
     optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
 
     start_epoch = checkpoint["epoch"]
+
+    if "config_dict" in checkpoint:
+        print("Loaded config:", checkpoint["config_dict"])
 
     print(f"Checkpoint epoch:{start_epoch} successfully loaded.")
     return start_epoch

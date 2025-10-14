@@ -47,5 +47,6 @@ if __name__ == "__main__":
         optimizer,
         start_epoch=start_epoch,
         num_epochs=10,
+        config_dict=config.dict(),
         on_eval=lambda: playground_inference(model, tokenizer, device, config),
     )

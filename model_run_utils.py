@@ -29,6 +29,7 @@ class ModelRunUtils:
         optimizer: torch.optim.Optimizer,
         val_loader: torch.utils.data.DataLoader,
         device: torch.device,
+        config_dict: dict,
         batch_loss_write_interval: int = 10,
         eval_interval: int = 30,
         tf_experiment: str = "runs/my_first_llm_exp",
@@ -44,6 +45,7 @@ class ModelRunUtils:
         self.batch_loss_write_interval = batch_loss_write_interval
         self.eval_interval = eval_interval
         self.eval_callback = eval_callback
+        self.config_dict = config_dict
 
     def handle_logs_and_evaluations(
         self,
@@ -91,4 +93,10 @@ class ModelRunUtils:
             filename = f"checkpoint_ep{epoch}_step{batch_idx}.pth.tar"
         else:
             filename = f"checkpoint_ep{epoch}.pth.tar"
-        save_checkpoint(epoch + 1, self.model, self.optimizer, filename=filename)
+        save_checkpoint(
+            epoch + 1,
+            self.model,
+            self.optimizer,
+            filename=filename,
+            config_dict=self.config_dict,
+        )

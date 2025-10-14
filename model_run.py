@@ -16,6 +16,7 @@ def train_model(
     val_loader: torch.utils.data.DataLoader,
     model: LLMModel,
     optimizer: torch.optim.Optimizer,
+    config_dict: dict,
     start_epoch: int = 0,
     num_epochs: int = 1,
     on_eval: Callable[[], None] | None = None,
@@ -28,6 +29,7 @@ def train_model(
         optimizer=optimizer,
         val_loader=val_loader,
         device=device,
+        config_dict=config_dict,
         eval_callback=on_eval,
     )
 
