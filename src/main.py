@@ -49,4 +49,5 @@ if __name__ == "__main__":
         num_epochs=10,
         config_dict=config.dict(),
         on_eval=lambda: playground_inference(model, tokenizer, device, config),
+        experiment_name="runs/mockexp1",
     )
