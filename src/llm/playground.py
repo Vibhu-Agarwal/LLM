@@ -19,11 +19,8 @@ def playground_inference(
     device: torch.device,
     config: Config,
     max_new_tokens: int = 200,
+    start_context: str = "After tea, Watson meets Sherlock and discusses the case. Sherlock is ",
 ):
-    start_context = (
-        "After tea, Watson meets Sherlock and discusses the case. Sherlock is "
-    )
-
     generate_and_print_sample(
         model=model,
         tokenizer=tokenizer,
