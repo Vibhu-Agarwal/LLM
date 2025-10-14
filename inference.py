@@ -32,7 +32,7 @@ def generate_and_print_sample(
             context_size=context_size,
         )
         decoded_text = token_ids_to_text(token_ids, tokenizer)
-        print(decoded_text)
+        print(decoded_text.encode("unicode-escape").decode())
 
 
 def generate_text_simple(

@@ -30,7 +30,7 @@ class ModelRunUtils:
         val_loader: torch.utils.data.DataLoader,
         device: torch.device,
         batch_loss_write_interval: int = 10,
-        eval_interval: int = 50,
+        eval_interval: int = 30,
         tf_experiment: str = "runs/my_first_llm_exp",
         eval_callback: Callable[[], None] | None = None,
     ):
@@ -56,12 +56,12 @@ class ModelRunUtils:
         if step == 0:
             return
 
+        epoch_avg_loss = epoch_total_loss / (batch_idx + 1)
+        print(
+            f"Epoch [{epoch+1}/{self.num_epochs}], Step [{batch_idx+1}/{self.n_train}], Batch Loss: {batch_loss:.4f}, Epoch Avg Loss: {epoch_avg_loss:.4f}"
+        )
         if batch_idx % self.batch_loss_write_interval == 0:
-            epoch_avg_loss = epoch_total_loss / (batch_idx + 1)
             self.writer.add_scalar("Train/BatchLoss", batch_loss, step)
-            print(
-                f"Epoch [{epoch+1}/{self.num_epochs}], Step [{batch_idx+1}/{self.n_train}], Batch Loss: {batch_loss:.4f}, Epoch Avg Loss: {epoch_avg_loss:.4f}"
-            )
 
         if step % self.eval_interval == 0:
             self.model.eval()

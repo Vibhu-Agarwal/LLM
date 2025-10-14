@@ -10,26 +10,24 @@ print(f"Using device: {device}")
 
 tokenizer = get_tokenizer()
 config = Config(
-    context_length=256,
+    context_length=512,
     vocab_size=tokenizer.n_vocab,
     emb_dim=128,
-    n_blocks=2,
-    n_heads=32,
-    ffn_dim=512,
+    n_blocks=4,
+    n_heads=16,
 )
 model = LLMModel(config).to(device)
-txt = open("data/adventures_of_sherlock_holmes.txt", "r").read()
 
 
 train_loader, val_loader = get_train_and_val_dataloaders(
-    DATA_FETCHERS["adventures_of_sherlock_holmes"],
+    DATA_FETCHERS["llm_data"],
     tokenizer,
     batch_size=32,
     max_length=config.context_length,
     stride=128,
     train_ratio=0.9,
 )
-optimizer = get_optimizer(model)
+optimizer = get_optimizer(model, lr=0.001)
 
 
 if __name__ == "__main__":
@@ -39,8 +37,8 @@ if __name__ == "__main__":
     start_epoch = 0
     if checkpoint_file:
         start_epoch = load_checkpoint(checkpoint_file, model, optimizer, device)
-        if start_epoch > 0:
-            playground_inference(model, tokenizer, device, config)
+
+    playground_inference(model, tokenizer, device, config)
 
     train_model(
         train_loader,
@@ -48,6 +46,6 @@ if __name__ == "__main__":
         model,
         optimizer,
         start_epoch=start_epoch,
-        num_epochs=1,
+        num_epochs=10,
         on_eval=lambda: playground_inference(model, tokenizer, device, config),
     )
