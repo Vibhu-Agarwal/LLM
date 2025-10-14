@@ -20,6 +20,7 @@ def train_model(
     start_epoch: int = 0,
     num_epochs: int = 1,
     on_eval: Callable[[], None] | None = None,
+    eval_interval: int = 50,
     experiment_name: str = "runs/experiment",
 ):
     device = get_device()
@@ -32,6 +33,7 @@ def train_model(
         device=device,
         config_dict=config_dict,
         eval_callback=on_eval,
+        eval_interval=eval_interval,
         tf_experiment=experiment_name,
     )
 
