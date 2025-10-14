@@ -62,8 +62,8 @@ class Block(nn.Module):
     def forward(self, x):
         identity = x
         x = self.ln1(x)  # B x T x E
-        x = self.attn(x)  # B x T x E
-        atten_out = identity + self.ln2(x)  # B x T x E
+        atten_out = self.attn(x)  # B x T x E
+        x = self.ln2(identity + atten_out)  # B x T x E
         x = self.mlp(x)  # B x T x E
         return x + atten_out  # B x T x E
 
