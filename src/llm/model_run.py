@@ -1,6 +1,6 @@
 import torch
 from model import LLMModel
-from utils import get_device
+from src.utils import get_device
 from model_run_utils import calc_loss_batch, ModelRunUtils
 from typing import Callable
 

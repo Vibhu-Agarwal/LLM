@@ -22,6 +22,9 @@ def generate_and_print_sample(
     context_size: int,
     max_new_tokens: int,
 ):
+    print(
+        f"Generating text with context: '{start_context}' [max_new_tokens={max_new_tokens} context_size={context_size}]"
+    )
     model.eval()
     encoded = text_to_token_ids(start_context, tokenizer).to(device)
     with torch.no_grad():
@@ -33,6 +36,8 @@ def generate_and_print_sample(
         )
         decoded_text = token_ids_to_text(token_ids, tokenizer)
         print(decoded_text.encode("unicode-escape").decode())
+        print("-" * 20)
+        print(decoded_text)
 
 
 def generate_text_simple(
@@ -50,4 +55,5 @@ def generate_text_simple(
 
         idx = torch.cat((idx, idx_next), dim=1)
 
+    print("Final token IDs shape:", idx.shape)
     return idx

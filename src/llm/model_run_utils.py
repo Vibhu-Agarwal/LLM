@@ -1,7 +1,7 @@
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from model import LLMModel
-from utils import save_checkpoint
+from src.utils import save_checkpoint
 from typing import Callable
 
 
@@ -32,7 +32,7 @@ class ModelRunUtils:
         config_dict: dict,
         batch_loss_write_interval: int = 10,
         eval_interval: int = 30,
-        tf_experiment: str = "runs/my_first_llm_exp",
+        tf_experiment: str = "runs/my_first_llm_exp_post_14oct_bugfix_1",
         eval_callback: Callable[[], None] | None = None,
     ):
         self.writer = SummaryWriter(tf_experiment)

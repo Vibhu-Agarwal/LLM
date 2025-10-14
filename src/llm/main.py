@@ -2,8 +2,8 @@ from config import Config
 from data import get_train_and_val_dataloaders, get_tokenizer, DATA_FETCHERS
 from model import LLMModel
 from model_run import get_optimizer, train_model
-from utils import load_checkpoint, ensure_checkpoints_dir_exists, get_device
-from playground import playground_inference
+from src.utils import load_checkpoint, ensure_checkpoints_dir_exists, get_device
+from src.playground import playground_inference
 
 device = get_device()
 print(f"Using device: {device}")

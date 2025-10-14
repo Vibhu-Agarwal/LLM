@@ -20,7 +20,9 @@ def playground_inference(
     config: Config,
     max_new_tokens: int = 200,
 ):
-    start_context = "Sherlock Holmes looked me in the eye and said"
+    start_context = (
+        "After tea, Watson meets Sherlock and discusses the case. Sherlock is "
+    )
 
     generate_and_print_sample(
         model=model,
