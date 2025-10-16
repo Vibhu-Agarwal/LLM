@@ -13,6 +13,10 @@ class Attention(nn.Module):
         self.cfg = cfg
         self.ln_for_qkv = nn.Linear(cfg.emb_dim, 3 * cfg.emb_dim)
 
+        self.c_proj = nn.Linear(cfg.emb_dim, cfg.emb_dim)
+        self.attn_dropout = nn.Dropout(cfg.dropout)
+        self.resid_dropout = nn.Dropout(cfg.dropout)
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         identity = x
         qkv_merged = self.ln_for_qkv(x)  # B x T x 3E
@@ -32,8 +36,11 @@ class Attention(nn.Module):
             attn_scores, dim=-1
         )  # B x nh x T x T
 
+        attn_weights = self.attn_dropout(attn_weights)
         x = attn_weights @ v  # B x nh x T x hs
         out = x.transpose(1, 2).contiguous().view(*identity.shape)  # B x T x E
+        out = self.c_proj(out)  # B x T x E
+        out = self.resid_dropout(out)
         return out
 
 
@@ -45,9 +52,10 @@ class MLP(nn.Module):
             nn.GELU(),
             nn.Linear(4 * cfg.emb_dim, cfg.emb_dim),
         )
+        self.dropout = nn.Dropout(cfg.dropout)
 
     def forward(self, x):
-        return self.ffn(x)
+        return self.dropout(self.ffn(x))
 
 
 class Block(nn.Module):
