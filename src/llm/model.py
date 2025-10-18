@@ -73,7 +73,7 @@ class Block(nn.Module):
         atten_out = self.attn(x)  # B x T x E
         x = self.ln2(identity + atten_out)  # B x T x E
         x = self.mlp(x)  # B x T x E
-        return x + atten_out  # B x T x E
+        return x + atten_out + identity  # B x T x E
 
 
 class Transformer(nn.Module):
