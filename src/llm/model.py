@@ -107,11 +107,12 @@ class GPT(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
         self.emb = TokenPostionEmbedding(cfg)
+        self.dropout = nn.Dropout(cfg.dropout)
         self.transformer = Transformer(cfg)
         self.ln_f = nn.Linear(cfg.emb_dim, cfg.vocab_size)
 
     def forward(self, in_idx):
-        emb = self.emb(in_idx)  # B x T x E
+        emb = self.dropout(self.emb(in_idx))  # B x T x E
         x = self.transformer(emb)  # B x T x E
         out = self.ln_f(x)  # B x T x V
         return out

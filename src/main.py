@@ -10,17 +10,23 @@ print(f"Using device: {device}")
 
 tokenizer = get_tokenizer()
 config = Config(
-    context_length=512,
+    context_length=256,
     vocab_size=tokenizer.n_vocab,
-    emb_dim=128,
-    n_blocks=4,
-    n_heads=16,
+    emb_dim=80,
+    n_blocks=2,
+    n_heads=8,
+    dropout=0.1,
 )
 model = LLMModel(config).to(device)
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Total model parameters: {total_params:,}")
+
+
+dd = DATA_FETCHERS["llm_data"]()
 
 
 train_loader, val_loader = get_train_and_val_dataloaders(
-    DATA_FETCHERS["llm_data"],
+    DATA_FETCHERS["wiki"],
     tokenizer,
     batch_size=32,
     max_length=config.context_length,

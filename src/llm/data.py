@@ -7,6 +7,16 @@ from pathlib import Path
 DataFetcher = Callable[[], str]
 
 
+def _get_wiki_text():
+    current_file_path = Path(__file__).resolve()
+    curr_dir = current_file_path.parent
+    data_file_path = curr_dir / "data" / "wiki_text.txt"
+
+    with open(data_file_path, "r") as file:
+        txt = file.read()
+    return txt
+
+
 def _get_sherlock_holmes_text(filename: str, start_marker: str, end_marker: str):
     current_file_path = Path(__file__).resolve()
     curr_dir = current_file_path.parent
@@ -80,6 +90,7 @@ def _get_llm_data_fetcher():
 DATA_FETCHERS: dict[str, DataFetcher] = {
     "adventures_of_sherlock_holmes": _get_adventures_of_sherlock_holmes_text,
     "llm_data": _get_llm_data_fetcher,
+    "wiki": _get_wiki_text,
 }
 
 
