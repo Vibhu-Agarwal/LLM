@@ -17,6 +17,18 @@ def _get_wiki_text():
     return txt
 
 
+def _get_harry_potter_text():
+    current_file_path = Path(__file__).resolve()
+    curr_dir = current_file_path.parent
+    data_file_path = (
+        curr_dir / "data" / "harry_potter" / "Harry_Potter_all_books_preprocessed.txt"
+    )
+
+    with open(data_file_path, "r") as file:
+        txt = file.read()
+    return txt
+
+
 def _get_sherlock_holmes_text(filename: str, start_marker: str, end_marker: str):
     current_file_path = Path(__file__).resolve()
     curr_dir = current_file_path.parent
@@ -91,6 +103,7 @@ DATA_FETCHERS: dict[str, DataFetcher] = {
     "adventures_of_sherlock_holmes": _get_adventures_of_sherlock_holmes_text,
     "llm_data": _get_llm_data_fetcher,
     "wiki": _get_wiki_text,
+    "harry_potter": _get_harry_potter_text,
 }
 
 
@@ -129,6 +142,8 @@ def get_train_and_val_dataloaders(
     train_ratio=0.9,
 ) -> tuple[DataLoader, DataLoader]:
     txt = data_fetcher()
+    print(f"Total characters in dataset: {len(txt)}")
+    print("Sample data:", txt[:1000], "...")
     split_idx = int(len(txt) * train_ratio)
 
     train_dataset = CustomDataset(txt[:split_idx], tokenizer, max_length, stride)
