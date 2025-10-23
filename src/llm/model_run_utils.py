@@ -31,7 +31,8 @@ class ModelRunUtils:
         device: torch.device,
         config_dict: dict,
         batch_loss_write_interval: int = 10,
-        eval_interval: int = 30,
+        eval_interval: int = 100,
+        save_interval: int = 100,
         tf_experiment: str = "runs/experiment",
         eval_callback: Callable[[], None] | None = None,
     ):
@@ -44,6 +45,7 @@ class ModelRunUtils:
         self.device = device
         self.batch_loss_write_interval = batch_loss_write_interval
         self.eval_interval = eval_interval
+        self.save_interval = save_interval
         self.eval_callback = eval_callback
         self.config_dict = config_dict
 
@@ -81,12 +83,13 @@ class ModelRunUtils:
                 f"GlobalSteps: {step}, Validation Loss: {val_loss:.4f}, Train (Epoch) Avg Loss: {epoch_avg_loss:.4f}"
             )
 
-            self.save_model(epoch, batch_idx)
-
             if self.eval_callback is not None:
                 self.eval_callback()
 
-            self.model.train()
+        if step % self.save_interval == 0:
+            self.save_model(epoch, batch_idx)
+
+        self.model.train()
 
     def save_model(self, epoch: int, batch_idx: int | None = None):
         if batch_idx is not None:
